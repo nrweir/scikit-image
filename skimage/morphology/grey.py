@@ -481,7 +481,7 @@ def black_tophat(image, selem=None, out=None, mode='reflect', cval=0.0,
     are smaller than the structuring element. Note that dark spots in the
     original image are bright spots after the black top hat.
 
-    When `out` is provided, this function directly performs opening as
+    When `out` is provided, this function directly performs closing as
     implemented in skimage's closing (a wrapper for
     scipy.ndimage.morphology.grey_closing). If `out` is not provided,
     scipy.ndimage.morphology.black_tophat is called directly.
@@ -530,7 +530,9 @@ def black_tophat(image, selem=None, out=None, mode='reflect', cval=0.0,
     if out is image:
         closed = closing(image, selem, mode=mode, cval=cval, origin=origin)
         out = closed - out
-    else:
-        out = ndi.morphology.black_tophat(image, footprint=selem, output=out,
-                                          mode=mode, cval=cval, origin=origin)
         return out
+    elif out is None:
+        out = np.empty_like(image)
+    out = ndi.morphology.black_tophat(image, footprint=selem, output=out,
+                                      mode=mode, cval=cval, origin=origin)
+    return out
