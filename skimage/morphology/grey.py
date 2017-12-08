@@ -197,8 +197,8 @@ def erosion(image, selem=None, out=None, shift_x=False, shift_y=False,
     selem = _shift_selem(selem, shift_x, shift_y)
     if out is None:
         out = np.empty_like(image)
-    ndi.grey_erosion(image, footprint=selem, output=out, mode=mode,
-                                cval=cval, origin=origin)
+    out = ndi.grey_erosion(image, footprint=selem, output=out, mode=mode,
+                           cval=cval, origin=origin)
     return out
 
 
@@ -275,8 +275,8 @@ def dilation(image, selem=None, out=None, shift_x=False, shift_y=False,
     selem = _invert_selem(selem)
     if out is None:
         out = np.empty_like(image)
-    ndi.grey_dilation(image, footprint=selem, output=out, mode=mode,
-                      cval=cval, origin=origin)
+    out = ndi.grey_dilation(image, footprint=selem, output=out, mode=mode,
+                            cval=cval, origin=origin)
     return out
 
 
