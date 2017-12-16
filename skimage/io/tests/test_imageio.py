@@ -52,6 +52,19 @@ def test_imageio_truncated_jpg():
         imread(os.path.join(data_dir, 'truncated.jpg'))
 
 
+@testing.skipif(not imageio_available, reason="imageio not installed")
+def test_imageio_bytestream():
+    # read in an image
+    img = imread(os.path.join(data_dir, 'camera.png'))
+    # convert to bytes object
+    img_as_bytes = img.tobytes()
+    img_as_bytearray = bytearray(img.tobytes())
+    read_bytes = imread(img_as_bytes)
+    assert img == read_bytes
+    read_bytearray = imread(img_as_bytearray)
+    assert img == read_bytearray
+
+
 class TestSave(TestCase):
 
     def roundtrip(self, x, scaling=1):

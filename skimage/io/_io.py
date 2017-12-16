@@ -14,12 +14,14 @@ __all__ = ['imread', 'imsave', 'imshow', 'show',
 
 def imread(fname, as_grey=False, plugin=None, flatten=None,
            **plugin_args):
-    """Load an image from file.
+    """Load an image from file or bytestream.
 
     Parameters
     ----------
-    fname : string
-        Image file name, e.g. ``test.jpg`` or URL.
+    fname : string, bytes, or bytearray
+        Either an image file name string ( e.g. ``test.jpg`` or URL), or a
+        bytes-like object containing image data. Note that processing a bytes-
+        like object requires the optional imageio plugin.
     as_grey : bool
         If True, convert color images to grey-scale (64-bit floats).
         Images that are already in grey-scale format are not converted.
@@ -47,6 +49,17 @@ def imread(fname, as_grey=False, plugin=None, flatten=None,
     # Backward compatibility
     if flatten is not None:
         as_grey = flatten
+
+    # convert fname to bytes object if it's a bytearray
+    if isinstance(fname, bytearray):
+        fname = bytes(bytearray)
+
+    # if given a bytes or bytearray object, use imageio to read bytestream
+    if isinstance(fname, bytes):
+        if plugin is not 'imageio':
+            warn('switching from %s to imageio plugin to read bytes object'
+                 % str(fname))
+            plugin = 'imageio'
 
     if plugin is None and hasattr(fname, 'lower'):
         if fname.lower().endswith(('.tiff', '.tif')):
